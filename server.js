@@ -14,11 +14,19 @@ app.use(parser.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-// app.post('/randomid', (req, res) => {
-//     const {randomId} = req.body;
-//     id = randomId;
-//     console.log('proxy id', id)
-// })
+app.post('/randomid', (req, res) => {
+    const {randomId} = req.body;
+    id = randomId;
+    console.log('proxy id', id)
+})
+
+app.get('/search/:keyword', (req, res) => {
+	let keyword = req.params.keyword;
+	axios
+		.get(`http://54.153.37.255:3001/search/${keyword}`)
+		.then(({data}) => res.json(data))
+		.catch(err => console.log(err))
+})
 
 app.get('/suggestions', (req, res) => {
 	axios
@@ -29,14 +37,6 @@ app.get('/suggestions', (req, res) => {
 		})
 		.then(({ data }) => res.send(JSON.stringify(data)))
 		.catch(err => res.send(JSON.stringify(err)))
-})
-
-app.get('/search/:keyword', (req, res) => {
-	let keyword = req.params.keyword;
-	axios
-		.get(`http://54.153.37.255/search/${keyword}`)
-		.then(({data}) => res.send(JSON.stringify(data)))
-		.catch(err => console.log(err))
 })
 
 app.get('/abibas/product', (req, res) => {
